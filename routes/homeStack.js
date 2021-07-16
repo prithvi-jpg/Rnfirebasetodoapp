@@ -33,7 +33,7 @@ export default function Navi() {
               <Stack.Screen name='Loading' component={LoadingScreen} options={{ headerShown: false }}/>
               <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
               <Stack.Screen name="Calendar" component={Calendar} />
-              <Stack.Screen name="Contactspage" component={Contactspage} />
+              <Stack.Screen name="Contactspage" component={Contactspage} options={{headerShown:false}}/>
               {/* <Stack.Screen name="Meetscd" component={Meetscd} /> */}
               
             </Stack.Navigator>
