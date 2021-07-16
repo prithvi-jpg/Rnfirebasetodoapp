@@ -7,20 +7,22 @@ import {
   SafeAreaView,
   FlatList,
   ActivityIndicator,
-  PermissionsAndroid,
+  TouchableOpacity,
+  PermissionsAndroid
 } from 'react-native';
-import { TouchableOpacity } from "react-native";
 import * as Contacts from 'expo-contacts';
 import * as Permissions from 'expo-permissions';
 import Expo from 'expo';
-
+// import firebase from 'firebase/firestore'
+import { AntDesign } from '@expo/vector-icons';
 
 export default class Contactspage extends React.Component {
-  constructor({navigation}) {
+  constructor() {
     super();
     this.state = {
       isLoading: false,
-      contacts: []
+      contacts: [],
+      tabSelected:'people'
     };
   }
 
@@ -45,23 +47,17 @@ export default class Contactspage extends React.Component {
     this.setState({ isLoading: true });
     this.loadContacts();
   }
-
   
-  ContactPress = () => {
-    navigation.navigate('Meetscd');
-  }
-
-
-  renderItem = ({ item }) => (
-    <View style={{ minHeight: 20, padding: 2 }}>
-      <TouchableOpacity onPress={this.ContactPress}>
-      <Text style={{ color: '#000000', fontWeight: 'bold',backgroundColor: '#ECF4F7', fontSize: 24, padding: 20, marginVertical: 8, marginHorizontal: 16 }}>
+  renderItem = ({ item,index }) => (   
+    <View style={{ minHeight: 25 }}>
+      <Text style={index%2==0?{backgroundColor:'#ECF4F7',fontSize:14,padding:15}:{backgroundColor:'white',fontSize:14,padding:15}}>
         {item.firstName + ' '}
         {item.lastName}
+        {console.log(item)}
       </Text>
-      </TouchableOpacity>
+      {/* {console.log('item',item)} */}
       <Text style={{ color: '#000000'}}>
-        {item.phoneNumbers[0].digits}
+        {item.phoneNumbers[0].number}
       </Text>
     </View>
   );
@@ -75,35 +71,54 @@ export default class Contactspage extends React.Component {
       ).toLowerCase();
 
       let searchTermLowercase = value.toLowerCase();
-
       return contactLowercase.indexOf(searchTermLowercase) > -1;
     });
     this.setState({ contacts: filteredContacts });
   };
-
+  
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <SafeAreaView style={{ backgroundColor: '#FFFFFF' }} />
+      <SafeAreaView >
+        <View style={{flexDirection:'row'}}>
+        <AntDesign name="arrowleft" size={20} color="black" style={{marginTop:43,marginLeft:5}}/>
+        <Text style={{fontSize:22,color:'black',marginTop:40,marginLeft:5}}>Back</Text>
+        </View>
+        
+        <View style={{padding:10}}>
         <TextInput
-          placeholder="Search People"
-          placeholderTextColor="#414142"
-          style={{
-            backgroundColor: '#FFFFFF',
-            height: 50,
-            fontSize: 28,
-            color: 'black',
-            borderBottomWidth: 2,
-            borderBottomColor: '#000000'
-          }}
-          onChangeText={value => this.searchContacts(value)}
-        />
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+           placeholder="Search People to invite"
+           placeholderTextColor="#414142"
+           style={{
+             backgroundColor: '#FFFFFF',
+             height: 50,
+             fontSize: 21,
+             color: 'black',
+             borderTopWidth:2,
+             borderLeftWidth:2,
+             borderRightWidth:2,
+             borderBottomWidth:5,
+             borderRadius:16,
+             padding:10
+           }}
+           onChangeText={value => this.searchContacts(value)}
+         />
+         </View>
+         <View style={{flexDirection:'row'}}>
+           <TouchableOpacity style={this.state.tabSelected=='people'?{width:'50%',height:52,borderBottomColor:'black',justifyContent:'center',alignItems:'center',borderBottomWidth:5}:{width:'50%',height:42,justifyContent:'center',alignItems:'center'}} onPress={()=>{
+             this.setState({tabSelected:'people'})
+           }}>
+           <Text style={{textAlign:'center',fontSize:14}}>People</Text>
+           </TouchableOpacity>
+           <TouchableOpacity style={{width:'50%',height:52,justifyContent:'center',alignItems:'center'}}>
+           <Text style={{textAlign:'center',fontSize:14}}>Invites Recieved</Text>
+           </TouchableOpacity>
+         </View>
+           <View style={{  backgroundColor: '#FFFFFF' }}>
           {this.state.isLoading ? (
-            <View
-              style={{
-                ...StyleSheet.absoluteFill,
-                alignItems: 'center',
+             <View
+               style={{
+                 ...StyleSheet.absoluteFill,
+                 alignItems: 'center',
                 justifyContent: 'center'
               }}
             >
@@ -127,8 +142,8 @@ export default class Contactspage extends React.Component {
               </View>
             )}
           />
-        </View>
-      </View>
+          </View>
+      </SafeAreaView>
     );
   }
 }
