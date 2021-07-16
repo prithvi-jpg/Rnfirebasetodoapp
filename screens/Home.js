@@ -14,7 +14,11 @@ import Header from './header';
 import firebase from 'firebase';
 import moment from 'moment';
 
+// console.log(firebase.auth().currentUser);
+// console.log(firebase.database().ref.name);
+// console.log(firebase.auth().currentUser.phoneNumber);
 // console.log(firebase.auth().currentUser.uid);
+// console.log(firebase.auth().currentUser.displayName);
 
 import _ from 'lodash';
 
@@ -74,6 +78,20 @@ const Home = ({ navigation }) => {
       })
       .catch(err => console.log(err));
   };
+
+  // handleSubmit = () => {
+//   addItem(this.state.name);
+//   
+// };
+
+//   const insertUser = () => {
+// //     const newDatabaseRouteRef = firebase.database.ref().child('users/' + user.uid + '/routes').push()
+// // // Set the value to the key of received ref
+// // newDatabaseRouteRef.set(newDatabaseRouteRef.key)
+
+
+
+
 
   const pressHandler = () => {
     

@@ -53,11 +53,12 @@ export default class Contactspage extends React.Component {
       <Text style={index%2==0?{backgroundColor:'#ECF4F7',fontSize:14,padding:15}:{backgroundColor:'white',fontSize:14,padding:15}}>
         {item.firstName + ' '}
         {item.lastName}
+        {console.log(item)}
       </Text>
       {/* {console.log('item',item)} */}
-      {/* <Text style={{ color: '#000000'}}>
-        {item.phoneNumbers[0].digits}
-      </Text> */}
+      <Text style={{ color: '#000000'}}>
+        {item.phoneNumbers[0].number}
+      </Text>
     </View>
   );
 
