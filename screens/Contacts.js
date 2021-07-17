@@ -13,7 +13,7 @@ import {
 import * as Contacts from 'expo-contacts';
 import * as Permissions from 'expo-permissions';
 import Expo from 'expo';
-// import firebase from 'firebase/firestore'
+import firebase from 'firebase';
 import { AntDesign } from '@expo/vector-icons';
 
 export default class Contactspage extends React.Component {
@@ -53,12 +53,11 @@ export default class Contactspage extends React.Component {
       <Text style={index%2==0?{backgroundColor:'#ECF4F7',fontSize:14,padding:15}:{backgroundColor:'white',fontSize:14,padding:15}}>
         {item.firstName + ' '}
         {item.lastName}
-        {console.log(item)}
       </Text>
       {/* {console.log('item',item)} */}
-      <Text style={{ color: '#000000'}}>
+      {/* <Text style={{ color: '#000000'}}>
         {item.phoneNumbers[0].number}
-      </Text>
+      </Text> */}
     </View>
   );
 
