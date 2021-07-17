@@ -10,8 +10,8 @@ import {
   Platform,
 } from 'react-native';
 import * as FirebaseRecaptcha from 'expo-firebase-recaptcha';
-import * as firebase from 'firebase';
 import Constants from 'expo-constants';
+import firebase from 'firebase';
 
 export default function PhoneAuthScreen({navigation}) {
   const recaptchaVerifier = React.useRef(null);
