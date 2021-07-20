@@ -8,11 +8,13 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
 import * as FirebaseRecaptcha from 'expo-firebase-recaptcha';
 import Constants from 'expo-constants';
 import firebase from 'firebase';
-
+import { Ionicons } from '@expo/vector-icons'; 
+import { LinearGradient } from 'expo-linear-gradient';
 export default function PhoneAuthScreen({navigation}) {
   const recaptchaVerifier = React.useRef(null);
   const verificationCodeTextInput = React.useRef(null);
@@ -27,27 +29,40 @@ export default function PhoneAuthScreen({navigation}) {
   const isConfigValid = !!Constants.manifest.extra.firebase.apiKey;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <FirebaseRecaptcha.FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={Constants.manifest.extra.firebase}
-        />
-        <Text style={styles.title}>CHITS</Text>
-        <Text style={styles.text}>Enter phone number</Text>
-        <TextInput
+
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["blue", "skyblue"]}
+        style={{
+          flex:1,
+          justifyContent:'center',
+          alignItems:'center'        
+        }}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <Text style={styles.title}>chits</Text>
+        <View style={{backgroundColor:'white',padding:22,justifyContent:'center',alignItems:'center',borderRadius:16,width:300}}>
+            <Text style={{fontWeight:'bold',fontSize:36}}>Login</Text>
+            <View style={{borderRadius:16,borderColor:'black',borderWidth:1,padding:10,flexDirection:'row'}}>
+            <Ionicons name="keypad" size={24} color="black" />
+            <TextInput
           style={styles.textInput}
           autoFocus={isConfigValid}
           autoCompleteType="tel"
           keyboardType="phone-pad"
           textContentType="telephoneNumber"
-          placeholder="+1 999 999 9999"
+          placeholder="Phone no."
+          placeholderTextColor='black'
           editable={!verificationId}
           onChangeText={phoneNumber => setPhoneNumber(phoneNumber.replace(/\s+/g, ''))}
         />
-        <Button
-          title={`${verificationId ? 'Resend' : 'Send'} Verification Code`}
-          disabled={!phoneNumber}
+        </View>
+        <FirebaseRecaptcha.FirebaseRecaptchaVerifierModal
+          ref={recaptchaVerifier}
+          firebaseConfig={Constants.manifest.extra.firebase}
+        />
+          <TouchableOpacity style={{backgroundColor:'black',padding:10,borderRadius:16,justifyContent:'center',alignItems:'center',margin:5}}
           onPress={async () => {
             const phoneProvider = new firebase.auth.PhoneAuthProvider();
             try {
@@ -60,80 +75,38 @@ export default function PhoneAuthScreen({navigation}) {
               );
               setVerifyInProgress(false);
               setVerificationId(verificationId);
-              verificationCodeTextInput.current?.focus();
+              navigation.navigate('otp',{verificationId:verificationId})
+              // verificationCodeTextInput.current?.focus();
             } catch (err) {
               setVerifyError(err);
               setVerifyInProgress(false);
             }
-          }}
-        />
+          }}>
+            <Text style={{fontSize:21,color:'white',fontWeight:'800'}}>Request otp</Text>
+          </TouchableOpacity>
+        </View>
         {verifyError && <Text style={styles.error}>{`Error: ${verifyError.message}`}</Text>}
-        {verifyInProgress && <ActivityIndicator style={styles.loader} />}
         {verificationId ? (
           <Text style={styles.success}>A verification code has been sent to your phone</Text>
         ) : (
           undefined
         )}
-        <Text style={styles.text}>Enter verification(OTP) code</Text>
-        <TextInput
-          ref={verificationCodeTextInput}
-          style={styles.textInput}
-          editable={!!verificationId}
-          placeholder="123456"
-          onChangeText={verificationCode=> setVerificationCode(verificationCode)}
-          
-        />
-        <Button
-          title="Confirm Verification Code"
-          disabled={!verificationCode}
-          onPress={async () => {
-            try {
-              setConfirmError(undefined);
-              setConfirmInProgress(true);
-              const credential = firebase.auth.PhoneAuthProvider.credential(
-                verificationId,
-                verificationCode
-              );
-              const authResult = await firebase.auth().signInWithCredential(credential);
-              setConfirmInProgress(false);
-              setVerificationId('');
-              setVerificationCode('');
-              await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-              verificationCodeTextInput.current?.clear();
-              if (authResult) {
-                Alert.alert('Successfully logged in', '✅', [
-                  {
-                    text: 'Close',
-                    // onPress: () => navigation.navigate('Home'),
-                    onPress: () => navigation.navigate('Loading'),
-                  },
-                ]);
-              }
-              //Alert.alert('Phone authentication successful!');
-            } catch (err) {
-              setConfirmError(err);
-              setConfirmInProgress(false);
-            }
-          }}
-        />
-        {confirmError && <Text style={styles.error}>{`Error: ${confirmError.message}`}</Text>}
-        {confirmInProgress && <ActivityIndicator style={styles.loader} />}
-      </View>
-    </View>
+      </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    // padding: 20,
   },
   content: {
-    marginTop: 50,
+    // marginTop: 50,
   },
   title: {
-    marginBottom: 2,
-    fontSize: 29,
+    color:'white',
+    fontSize: 72,
+    textAlign:'center',
     fontWeight: 'bold',
   },
   subtitle: {
@@ -146,18 +119,18 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   textInput: {
-    marginBottom: 8,
-    fontSize: 17,
-    fontWeight: 'bold',
+    // marginBottom: 8,
+    fontSize: 15,
+    // fontWeight: 'bold',
   },
   error: {
     marginTop: 10,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: 'red',
   },
   success: {
     marginTop: 10,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: 'blue',
   },
   loader: {

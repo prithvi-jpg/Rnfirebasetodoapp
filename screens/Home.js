@@ -144,7 +144,7 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={styles.conatainer}>
-       <Header />
+       <Header navigation={navigation}/>
       <Modal visible={modalVisible}>
         <View style={styles.modal}>
           <TextInput
@@ -170,20 +170,20 @@ const Home = ({ navigation }) => {
         />
 
       </View>
-      <View style={styles.buttonSection}>
+      {/* <View style={styles.buttonSection}>
         <Button title="Add task" onPress={() => setModalVisible(true)} />
         <Button title="go to calendar page" onPress={pressHandler}/>
         <Button title="contacts" onPress={pushHandler}/>
         <Button title="Signout" onPress={signoutHandler}/>
         
-      </View>
+      </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   conatainer: {
-    padding: 25,
+    // padding: 25,
     //backgroundColor: 'grey',
     flex: 1,
     backgroundColor: '#FFFFFF',
