@@ -14,7 +14,7 @@ const Stack = createStackNavigator();
 
 const Login = () => {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="PhoneAuth">
         <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} options={{headerShown:false}}/>
         <Stack.Screen name="otp" component={Otp} options={{headerShown:false}}/>
       </Stack.Navigator>

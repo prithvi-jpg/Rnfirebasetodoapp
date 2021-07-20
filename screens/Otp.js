@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { View,Text,Image,TextInput,TouchableOpacity,Alert } from 'react-native';
 import firebase from 'firebase';
 export default function Otp(props){
@@ -7,6 +7,7 @@ export default function Otp(props){
     const [verificationCode, setVerificationCode] = React.useState('');
     const [confirmError, setConfirmError] = React.useState();
     const [confirmInProgress, setConfirmInProgress] = React.useState(false);
+   
     return(
         <View style={{flex:1,backgroundColor:'white',justifyContent:'center',alignItems:'center'}}>
             <Text style={{fontSize:27,fontWeight:'bold'}}>Enter otp</Text>

@@ -15,17 +15,14 @@ import Constants from 'expo-constants';
 import firebase from 'firebase';
 import { Ionicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function PhoneAuthScreen({navigation}) {
   const recaptchaVerifier = React.useRef(null);
-  const verificationCodeTextInput = React.useRef(null);
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [verificationId, setVerificationId] = React.useState('');
   const [verifyError, setVerifyError] = React.useState();
   const [verifyInProgress, setVerifyInProgress] = React.useState(false);
-  const [verificationCode, setVerificationCode] = React.useState('');
-  const [confirmError, setConfirmError] = React.useState();
-  const [confirmInProgress, setConfirmInProgress] = React.useState(false);
-  const [userAu, setUserAu] = React.useState(null);
+  const [userName,setUserName]=React.useState("");
   const isConfigValid = !!Constants.manifest.extra.firebase.apiKey;
 
   return (
@@ -44,7 +41,21 @@ export default function PhoneAuthScreen({navigation}) {
         <Text style={styles.title}>chits</Text>
         <View style={{backgroundColor:'white',padding:22,justifyContent:'center',alignItems:'center',borderRadius:16,width:300}}>
             <Text style={{fontWeight:'bold',fontSize:36}}>Login</Text>
-            <View style={{borderRadius:16,borderColor:'black',borderWidth:1,padding:10,flexDirection:'row'}}>
+            <View style={{borderRadius:16,borderColor:'black',borderWidth:1,padding:10,flexDirection:'row',width:250,margin:10}}>
+            
+            <TextInput
+          style={styles.textInput}
+          autoFocus={isConfigValid}
+          autoCompleteType="name"
+          // keyboardType="name-phone-pad"
+          // textContentType="telephoneNumber"
+          placeholder="Name"
+          placeholderTextColor='black'
+          // editable={!verificationId}
+          onChangeText={name => setUserName(name)}
+        />
+        </View>
+            <View style={{borderRadius:16,borderColor:'black',borderWidth:1,padding:10,flexDirection:'row',width:250,margin:10}}>
             <Ionicons name="keypad" size={24} color="black" />
             <TextInput
           style={styles.textInput}
@@ -75,8 +86,17 @@ export default function PhoneAuthScreen({navigation}) {
               );
               setVerifyInProgress(false);
               setVerificationId(verificationId);
+              function storeUserNamewithPhone(userName,phone) {
+                firebase
+                  .database()
+                  .ref('users/')
+                  .set({
+                    userName: userName,
+                    phone:phone
+                  });
+              }
+              storeUserNamewithPhone(userName,phoneNumber)
               navigation.navigate('otp',{verificationId:verificationId})
-              // verificationCodeTextInput.current?.focus();
             } catch (err) {
               setVerifyError(err);
               setVerifyInProgress(false);
