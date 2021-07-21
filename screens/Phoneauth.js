@@ -17,6 +17,7 @@ export default function PhoneAuthScreen({navigation}) {
   const recaptchaVerifier = React.useRef(null);
   const verificationCodeTextInput = React.useRef(null);
   const [phoneNumber, setPhoneNumber] = React.useState('');
+  const [displayName, setDisplayName] = React.useState('');
   const [verificationId, setVerificationId] = React.useState('');
   const [verifyError, setVerifyError] = React.useState();
   const [verifyInProgress, setVerifyInProgress] = React.useState(false);
@@ -34,6 +35,15 @@ export default function PhoneAuthScreen({navigation}) {
           firebaseConfig={Constants.manifest.extra.firebase}
         />
         <Text style={styles.title}>CHITS</Text>
+        {/* user name text input --- */}
+        <Text style={styles.text}>Enter USER NAME</Text>
+        <TextInput
+          style={styles.textInput}
+          editable={!verificationId}
+          placeholder="Your Name"
+          onChangeText={displayName=> setDisplayName(displayName)}
+        />
+        {/* phone number text input ---- */}
         <Text style={styles.text}>Enter phone number</Text>
         <TextInput
           style={styles.textInput}

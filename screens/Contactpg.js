@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState, useContext }from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,49 +16,44 @@ import Expo from 'expo';
 import firebase from 'firebase';
 import { AntDesign } from '@expo/vector-icons';
 
+export default function Contactpg({ navigation }) {
 
-export default class Contactspage extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      isLoading: false,
-      contacts: [],
-      userphoneNumber: '',
-      tabSelected:'people'
-    };
-  }
+  const [tabSelected, setTabSelected] = useState('people');
+  const [contacts, setContacts] = useState([]);
+  const [inMemoryContacts, setInMemoryContacts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  loadContacts = async () => {
-    const permission = await Permissions.askAsync(
-      Permissions.CONTACTS
-    );
+  useEffect(() => {
+    (loadContacts = async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === 'granted') {
+        const { data } = await Contacts.getContactsAsync({
+          fields: [Contacts.Fields.PhoneNumbers],
+        });
 
-    if (permission.status !== 'granted') {
-      return;
-    }
+        if (data.length > 0) {
+          setContacts(data);
+          setInMemoryContacts(data);
+          
+        }
+      }
+    })();
+  }, []);
 
-    const { data } = await Contacts.getContactsAsync({
-      fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails]
-    });
+  useEffect(() => {
+    setIsLoading(true);
+    loadContacts();
+  }, [])
 
-    //console.log(data);
-    this.setState({ contacts: data, inMemoryContacts: data, isLoading: false });
-  };
-
-  componentDidMount() {
-    this.setState({ isLoading: true });
-    this.loadContacts();
-  }
-
-  onPress = () => {
-    // this.navigation.navigate('Meetscd');
+  const onPress = () => {
      // this.props.navigation.navigate('ContactDetailPage', { contact: item, detailParam:item.name})
-    this.props.navigation.navigate('Meetscd')
+    navigation.navigate('Meetscd')
   }
-  
-  renderItem = ({ item,index }) => (   
+
+
+  const renderItem = ({ item,index }) => (   
     <View style={{ minHeight: 25 }}>
-      <TouchableOpacity onPress={this.onPress}>
+      <TouchableOpacity onPress={onPress}>
       <Text style={index%2==0?{backgroundColor:'#ECF4F7',fontSize:14,padding:15}:{backgroundColor:'white',fontSize:14,padding:15}}>
         {item.firstName + ' '}
         {item.lastName}
@@ -71,8 +66,8 @@ export default class Contactspage extends React.Component {
     </View>
   );
 
-  searchContacts = value => {
-    const filteredContacts = this.state.inMemoryContacts.filter(contact => {
+  const searchContacts = value => {
+    const filteredContacts = inMemoryContacts.filter(contact => {
       let contactLowercase = (
         contact.firstName +
         ' ' +
@@ -82,12 +77,11 @@ export default class Contactspage extends React.Component {
       let searchTermLowercase = value.toLowerCase();
       return contactLowercase.indexOf(searchTermLowercase) > -1;
     });
-    this.setState({ contacts: filteredContacts });
+    setContacts(filteredContacts);
   };
-  
-  render() {
-    return (
-      <SafeAreaView >
+
+  return (
+    <SafeAreaView >
         <View style={{flexDirection:'row'}}>
         <AntDesign name="arrowleft" size={20} color="black" style={{marginTop:43,marginLeft:5}}/>
         <Text style={{fontSize:22,color:'black',marginTop:40,marginLeft:5}}>Back</Text>
@@ -109,12 +103,12 @@ export default class Contactspage extends React.Component {
              borderRadius:16,
              padding:10
            }}
-           onChangeText={value => this.searchContacts(value)}
+           onChangeText={value => searchContacts(value)}
          />
          </View>
          <View style={{flexDirection:'row'}}>
-           <TouchableOpacity style={this.state.tabSelected=='people'?{width:'50%',height:52,borderBottomColor:'black',justifyContent:'center',alignItems:'center',borderBottomWidth:5}:{width:'50%',height:42,justifyContent:'center',alignItems:'center'}} onPress={()=>{
-             this.setState({tabSelected:'people'})
+           <TouchableOpacity style={tabSelected=='people'?{width:'50%',height:52,borderBottomColor:'black',justifyContent:'center',alignItems:'center',borderBottomWidth:5}:{width:'50%',height:42,justifyContent:'center',alignItems:'center'}} onPress={()=>{
+             setTabSelected('people')
            }}>
            <Text style={{textAlign:'center',fontSize:14}}>People</Text>
            </TouchableOpacity>
@@ -123,7 +117,7 @@ export default class Contactspage extends React.Component {
            </TouchableOpacity>
          </View>
            <View style={{  backgroundColor: '#FFFFFF' }}>
-          {this.state.isLoading ? (
+          {isLoading ? (
              <View
                style={{
                  ...StyleSheet.absoluteFill,
@@ -135,8 +129,8 @@ export default class Contactspage extends React.Component {
             </View>
           ) : null}
           <FlatList
-            data={this.state.contacts}
-            renderItem={this.renderItem}
+            data={contacts}
+            renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             ListEmptyComponent={() => (
               <View
@@ -153,8 +147,7 @@ export default class Contactspage extends React.Component {
           />
           </View>
       </SafeAreaView>
-    );
-  }
+  );
 }
 
 const styles = StyleSheet.create({
@@ -162,6 +155,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
