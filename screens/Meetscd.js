@@ -29,31 +29,61 @@ const Meetscd = ({ route, navigation }) => {
       setSelectedStartDate(date);
   };
 
+  
   const [selectedId, setSelectedId] = useState(null);
 
-  const DATA = [
-    {
+  //DATE DATA Array
+
+  var DATA = [];
+  if (selectedStartDate){
+    var a = selectedStartDate.hour(10).minute(30).second(0);
+    let obj = {
       id: "1",
-      title: "10:00am",
-    },
-    {
+      liDate: a.format("hh:mm A"),
+    }
+    DATA=[...DATA,obj];
+  }
+  else{
+    console.log("no date selected errororo");
+  }
+  if (selectedStartDate){
+    var b = selectedStartDate.hour(12).minute(0).second(0);
+    let obj = {
       id: "2",
-      title: "12:00pm",
-    },
-    {
+      liDate: b.format("hh:mm A"),
+    }
+    DATA=[...DATA,obj];
+  }
+  else{
+    console.log("no date selected errororo");
+  }
+  if (selectedStartDate){
+    var c = selectedStartDate.hour(3).minute(30).second(0);
+    let obj = {
       id: "3",
-      title: "3:30pm",
-    },
-    {
+      liDate: c.format("hh:mm A"),
+    }
+    DATA=[...DATA,obj];
+  }
+  else{
+    console.log("no date selected errororo");
+  }
+  if (selectedStartDate){
+    var d = selectedStartDate.hour(7).minute(30).second(0);
+    let obj = {
       id: "4",
-      title: "8:00pm",
-    },
-  ];
-  
+      liDate: d.format("hh:mm A"),
+    }
+    DATA=[...DATA,obj];
+  }
+  else{
+    console.log("no date selected errororo");
+  }
+  // console.log(DATA);
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <Text style={[styles.itemTitle, textColor]}>{item.title}</Text>
+      <Text style={[styles.Datelist, textColor]}>{item.liDate}</Text>
     </TouchableOpacity>
   );
 
@@ -150,7 +180,7 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
     borderRadius: 10,
   },
-  itemTitle: {
+  Datelist: {
     fontSize: 32,
   }
 });

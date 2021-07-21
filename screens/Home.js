@@ -40,7 +40,7 @@ const Home = ({ navigation }) => {
   });
 
   let authedUser = firebase.auth().currentUser.uid;
-  let today = moment().set({'hour':12,'minute':0,'second':0,'millisecond':0}) .toString();
+  let today = moment().set({'hour':12,'minute':0,'second':0,'millisecond':0}).toString();
   // console.log(authedUser);
   // const [user, setUser] = useState();
 
@@ -48,7 +48,7 @@ const Home = ({ navigation }) => {
     getTasks();
     firebase.database().ref('users/').on('value',(snapshot)=>{
       const rec=snapshot.val();
-      console.log('ooo',rec)
+      // console.log('ooo',rec)
       setUserList(rec);
     })
   }, []);
@@ -153,7 +153,7 @@ const Home = ({ navigation }) => {
   //     <Text style={{color:'black'}}>{item.userName}</Text>
   //   )
   // }
-  console.log('userlist',userList.userName)
+  // console.log('userlist',userList.userName)
   return (
     <View style={styles.conatainer}>
        <Header navigation={navigation}/>

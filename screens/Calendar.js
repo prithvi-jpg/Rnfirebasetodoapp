@@ -13,6 +13,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 import _ from 'lodash';
 import firebase from 'firebase';
+// const { auth } = useContext(FirebaseContext);
  
 export default function Calendar({ route, navigation }) {
 
@@ -21,7 +22,7 @@ export default function Calendar({ route, navigation }) {
   const startDate = selectedStartDate ? selectedStartDate.toString() : '';
   const onDateChange = (date, type) => {
       setSelectedStartDate(date);
-      //console.log(selectedStartDate);
+      // console.log(selectedStartDate);
   };
 
 
