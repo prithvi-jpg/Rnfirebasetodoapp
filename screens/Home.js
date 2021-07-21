@@ -105,7 +105,8 @@ const Home = ({ navigation }) => {
   }
 
   const pushHandler = () => {
-    navigation.navigate('Contactspage');
+    // navigation.navigate('Contactspage');
+    navigation.navigate('Contactpg');
   }
 
   const signoutHandler = () => {
