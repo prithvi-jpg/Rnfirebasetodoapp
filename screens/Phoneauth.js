@@ -19,7 +19,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function PhoneAuthScreen({navigation}) {
   const recaptchaVerifier = React.useRef(null);
   const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [displayName, setDisplayName] = React.useState('');
   const [verificationId, setVerificationId] = React.useState('');
   const [verifyError, setVerifyError] = React.useState();
   const [verifyInProgress, setVerifyInProgress] = React.useState(false);
@@ -55,25 +54,10 @@ export default function PhoneAuthScreen({navigation}) {
           // editable={!verificationId}
           onChangeText={name => setUserName(name)}
         />
-
-        <Text style={styles.title}>CHITS</Text>
-        {/* user name text input --- */}
-        <Text style={styles.text}>Enter USER NAME</Text>
-        <TextInput
-          style={styles.textInput}
-          editable={!verificationId}
-          placeholder="Your Name"
-          onChangeText={displayName=> setDisplayName(displayName)}
-        />
-        {/* phone number text input ---- */}
-        <Text style={styles.text}>Enter phone number</Text>
-        <TextInput
-
         </View>
             <View style={{borderRadius:16,borderColor:'black',borderWidth:1,padding:10,flexDirection:'row',width:250,margin:10}}>
             <Ionicons name="keypad" size={24} color="black" />
             <TextInput
-
           style={styles.textInput}
           autoFocus={isConfigValid}
           autoCompleteType="tel"
