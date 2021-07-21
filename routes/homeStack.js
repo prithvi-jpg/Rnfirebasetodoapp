@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderStyleInterpolators } from '@react-navigation/stack';
 import Home from '../screens/Home';
 import Calendar from '../screens/Calendar';
 import 'react-native-gesture-handler';
@@ -34,7 +34,9 @@ export default function Navi() {
               <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
               <Stack.Screen name="Calendar" component={Calendar} />
               <Stack.Screen name="Contactpg" component={Contactpg} options={{ headerShown: false }} />
-              <Stack.Screen name="Meetscd" component={Meetscd} />
+              <Stack.Screen name="Meetscd" component={Meetscd} options={
+                ({ route }) => ({ title: route.params.Userph, headerTitleStyle:{color: 'white'},headerStyle: { backgroundColor: '#48434B' }})
+                }/>
               
             </Stack.Navigator>
         </NavigationContainer>

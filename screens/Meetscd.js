@@ -1,36 +1,163 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { useEffect, useState, useContext }from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Modal,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import CalendarPicker from 'react-native-calendar-picker';
+import moment from 'moment';
+import firebase from 'firebase';
+
 
 //get phonenumber from Contactpg.js through route,params and display it
 //get name from Contactpg.js through route,params and display it
 
+
 const Meetscd = ({ route, navigation }) => {
   // Get the param Userph passed to the component
   const { Userph } = route.params;
+  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const startDate = selectedStartDate ? selectedStartDate.toString() : '';
+  const minDate = new Date();
+  const onDateChange = (date, type) => {
+      setSelectedStartDate(date);
+  };
+
+  const [selectedId, setSelectedId] = useState(null);
+
+  const DATA = [
+    {
+      id: "1",
+      title: "10:00am",
+    },
+    {
+      id: "2",
+      title: "12:00pm",
+    },
+    {
+      id: "3",
+      title: "3:30pm",
+    },
+    {
+      id: "4",
+      title: "8:00pm",
+    },
+  ];
+  
+
+  const Item = ({ item, onPress, backgroundColor, textColor }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+      <Text style={[styles.itemTitle, textColor]}>{item.title}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderItem = ({ item }) => {
+    const backgroundColor = item.id === selectedId ? "#6B8CCE" : "#F5FCFE";
+    const color = item.id === selectedId ? 'white' : 'black';
+
+
+    return (
+      <Item
+        item={item}
+        onPress={() => setSelectedId(item.id)}
+        backgroundColor={{ backgroundColor }}
+        textColor={{ color }}
+      />
+    );
+  };
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>
-        Meeting scheduler page! 🎉
-        phonenumber: {JSON.stringify(Userph)}
+    <View style={styles.container}>
+      <Text style={styles.dispMessage}>
+        Schedule a Meeting with {JSON.stringify(Userph)},
       </Text>
+      <View style={styles.calContainer}>
+      <CalendarPicker
+        selectedDayColor="#6B8CCE"
+        selectedDayTextColor="#FFFFFF"
+        todayBackgroundColor="#91afed"
+        onDateChange={onDateChange}
+        minDate={minDate}
+      />
+      </View>
+      <Text style={styles.dispMeetMessage}>
+        Select the time available,
+      </Text>
+      <View>
+        <Text>SELECTED START DATE:{startDate}</Text>
+      </View>
+      <SafeAreaView style={styles.listContainer}>
+      <FlatList
+        data={DATA}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        extraData={selectedId}
+      />
+    </SafeAreaView>
     </View>
   );
 }
 
+//create stylesheet for container
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  dispMessage: {
+    fontSize: 17,
+    textAlign: 'center',
+    margin: 10,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  //move calContainer to the top of the page below dispmessage
+  calContainer: {
+    position: 'absolute',
+    top: 30,
+  },
+  //display dispMeetMessage below after calContainer
+  dispMeetMessage: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+    position: 'absolute',
+    top: 340,
+  },
+  listContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 370,
+  },
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderColor: '#bbb',
+    borderWidth: 2,
+    borderStyle: "dashed",
+    borderRadius: 10,
+  },
+  itemTitle: {
+    fontSize: 32,
+  }
+});
+
 export default Meetscd;
 
-//IN Contacts.js
-//1. I need a toucable opacity for each element in the flatlist ref - https://reactnative.dev/docs/flatlist - flatlist selectable.
-//2. Then {on Press} we do two functions:
-        // a. create a useState to retrieve the user id of the item and set it once the touchable opacity item is pressed.
-        // b. seconf function would be to navigate to the meeting schedule page, with us passing in the parameters user id and phone no.
-//3. Then we move to the meeting scheduler where we get the user id through route.params use this to render out the information required.
-//4. How to render:
-     //a. Instead of using currentUser.uid we would have id set from route.params,
-     //b. Display calendar once a date is selected (our calendar actually needs to have a start time and an end time for every event, .query({ startDateTime: start, endDateTime: end}) , .orderByValue('start/dateTime'), <Text> {convertDateTime(item.start.dateTime)} - {convertDateTime(item.end.dateTime)}</Text>, if we are going have duration(15,30,60) and if the user gives only start time we should set a default value of say 30min instead. (https://firebase.google.com/docs/reference/android/com/google/firebase/appindexing/builders/ReservationBuilder) (https://material-ui.com/components/pickers/))
-     //c. Now to Proceed without that, we would show 5 timeslots from the Selecteddate from range 6am-6pm, at whole no.(ex 10:00, 4:30) etc and store it a temp variable.
-     //d. Once selected and confirmed it moves onto a one way not live chat page where u can type in meeting description and send an audio message store this in cloud and send it to reciever user end.
-     //e. send confirmation and await for reciever-end acceptance and then add the selecteddate temp variable into both calendars.
+
 
   
 

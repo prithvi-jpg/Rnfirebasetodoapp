@@ -59,13 +59,14 @@ export default function Contactpg({ navigation }) {
       }
     }
   };
-
-
-
-
+ 
   const renderItem = ({ item,index }) => (   
     <View style={{ minHeight: 25 }}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={() => {
+          navigation.navigate('Meetscd', {
+            Userph: item.phoneNumbers[0].number,
+          });
+        }}>
       <Text style={index%2==0?{backgroundColor:'#ECF4F7',fontSize:14,padding:15}:{backgroundColor:'white',fontSize:14,padding:15}}>
         {item.firstName + ' '}
         {item.lastName}

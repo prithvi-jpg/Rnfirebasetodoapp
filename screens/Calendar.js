@@ -57,23 +57,6 @@ export default function Calendar({ route, navigation }) {
      return <View />;
   }
 
-  // const Displaytasks = ({tasksobj}) => {
-  //     return <Text style={styles.item}>{tasksobj.task} </Text>
-  // }
-
-  //tries to show list of taks for only the selected date..
-  // const Displaytasks = ({tasksobj}) => {
-  //   if (tasksobj.user == 1 && tasksobj.date == selectedStartDate){
-  //     return <Text style={styles.item}>{tasksobj.task} </Text>
-  //   }
-  //    return <View />;
-  // }
-
-
-  
-  
-
-
   return (
     <View style={styles.container}>
       <CalendarPicker
