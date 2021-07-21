@@ -18,7 +18,7 @@ export default LoadingScreen = ({ navigation }) => {
                     console.log('data success ' , data)
                 }).catch((error)=>{
                     console.log('error ' , error)
-                });
+    });
   
   //The bug here would be everytime i log in, it would push the user name and used id again into db,
   //there should either be an "if case" to compare with the existent data in the db,
