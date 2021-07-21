@@ -7,6 +7,7 @@ import 'react-native-gesture-handler';
 import PhoneAuthScreen from '../screens/Phoneauth';
 import LoadingScreen from '../screens/LoadingScreen';
 import Meetscd from '../screens/Meetscd';
+import Chatscd from '../screens/Chatcsd';
 
 import Contactpg from '../screens/Contactpg';
 
@@ -41,6 +42,7 @@ export default function Navi() {
               <Stack.Screen name="Meetscd" component={Meetscd} options={
                 ({ route }) => ({ title: route.params.Userph, headerTitleStyle:{color: 'white'},headerStyle: { backgroundColor: '#48434B' }})
                 }/>
+              <Stack.Screen name="Chatscd" component={Chatscd} options={({ route }) => ( { title: route.params.Userph } )  }/>
               
             </Stack.Navigator>
         </NavigationContainer>

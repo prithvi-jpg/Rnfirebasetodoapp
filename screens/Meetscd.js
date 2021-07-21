@@ -39,7 +39,7 @@ const Meetscd = ({ route, navigation }) => {
     var a = selectedStartDate.hour(10).minute(30).second(0);
     let obj = {
       id: "1",
-      liDate: a.format("hh:mm A"),
+      liDate: a,
     }
     DATA=[...DATA,obj];
   }
@@ -50,7 +50,7 @@ const Meetscd = ({ route, navigation }) => {
     var b = selectedStartDate.hour(12).minute(0).second(0);
     let obj = {
       id: "2",
-      liDate: b.format("hh:mm A"),
+      liDate: b,
     }
     DATA=[...DATA,obj];
   }
@@ -61,7 +61,7 @@ const Meetscd = ({ route, navigation }) => {
     var c = selectedStartDate.hour(3).minute(30).second(0);
     let obj = {
       id: "3",
-      liDate: c.format("hh:mm A"),
+      liDate: c,
     }
     DATA=[...DATA,obj];
   }
@@ -72,7 +72,7 @@ const Meetscd = ({ route, navigation }) => {
     var d = selectedStartDate.hour(7).minute(30).second(0);
     let obj = {
       id: "4",
-      liDate: d.format("hh:mm A"),
+      liDate: d,
     }
     DATA=[...DATA,obj];
   }
@@ -81,9 +81,10 @@ const Meetscd = ({ route, navigation }) => {
   }
   // console.log(DATA);
 
+
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <Text style={[styles.Datelist, textColor]}>{item.liDate}</Text>
+      <Text style={[styles.Datelist, textColor]}>{item.liDate.format("hh:mm A")}</Text>
     </TouchableOpacity>
   );
 
@@ -95,7 +96,11 @@ const Meetscd = ({ route, navigation }) => {
     return (
       <Item
         item={item}
-        onPress={() => setSelectedId(item.id)}
+        //onPress setSelectedId as item.id and Navigate to the Chatscd route with params Userph and the liDate for the selectedId
+        onPress={() => {
+          setSelectedId(item.id);
+          navigation.navigate('Chatscd', { Userph: Userph, liDate: item.liDate });
+        }}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />
