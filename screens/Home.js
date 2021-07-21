@@ -13,7 +13,7 @@ import {
 import Header from './header';
 import firebase from 'firebase';
 import moment from 'moment';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 // console.log(firebase.auth().currentUser);
 // console.log(firebase.database().ref.name);
 // console.log(firebase.auth().currentUser.phoneNumber);
@@ -32,7 +32,7 @@ const Home = ({ navigation }) => {
   const [newTask, setNewTask] = useState(' ');
   const [tasks, setTasks] = useState([]);
   const [authenticated, setAutheticated] = useState(false);
-
+  const [userList,setUserList]=useState([]);
   firebase.auth().onAuthStateChanged((userauth) => {
     if (userauth) {
       setAutheticated(true);
@@ -46,6 +46,11 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     getTasks();
+    firebase.database().ref('users/').on('value',(snapshot)=>{
+      const rec=snapshot.val();
+      console.log('ooo',rec)
+      setUserList(rec);
+    })
   }, []);
 
   const getTasks = () => {
@@ -142,11 +147,42 @@ const Home = ({ navigation }) => {
     }
      return <View />;
   }
-
+  // const renderItem=({item})=>{
+  //   console.log('aaa',item.userName)
+  //   return(
+  //     <Text style={{color:'black'}}>{item.userName}</Text>
+  //   )
+  // }
+  console.log('userlist',userList.userName)
   return (
     <View style={styles.conatainer}>
-       <Header />
-      <Modal visible={modalVisible}>
+       <Header navigation={navigation}/>
+       <View style={{backgroundColor:'white',marginTop:'30%',borderTopLeftRadius:20,borderTopRightRadius:20,position:'absolute',bottom:0,width:'100%',height:'70%',padding:15}}>
+         <Text style={{fontSize:24}}>People</Text>
+        {userList!==[] && (
+          <View style={{flexDirection:'row'}}>
+          <View style={{justifyContent:'center',alignItems:'center'}}>
+           <MaterialCommunityIcons name="face-profile" size={50} color="black" style={{}}/>
+          <Text style={{fontSize:18}}>{userList.userName}</Text>
+          </View>
+          </View>
+        )}
+        <View style={{marginTop:10}}>
+          <Text style={{fontSize:24}}>Today's schedule</Text>
+          <View style={styles.listSection}>
+        <FlatList
+          keyExtractor={keyExtractor}
+          data={tasks}
+          renderItem={({item}) => 
+          (
+            <Displaytasks userobj = {item} /> 
+          )
+        }
+        />
+        </View>
+        </View>
+       </View>
+      {/* <Modal visible={modalVisible}>
         <View style={styles.modal}>
           <TextInput
             style={styles.textInput}
@@ -168,23 +204,23 @@ const Home = ({ navigation }) => {
             <Displaytasks userobj = {item} /> 
           )
         }
-        />
+        /> */}
 
-      </View>
-      <View style={styles.buttonSection}>
+      {/* </View> */}
+      {/* <View style={styles.buttonSection}>
         <Button title="Add task" onPress={() => setModalVisible(true)} />
         <Button title="go to calendar page" onPress={pressHandler}/>
         <Button title="contacts" onPress={pushHandler}/>
         <Button title="Signout" onPress={signoutHandler}/>
         
-      </View>
+      </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   conatainer: {
-    padding: 25,
+    // padding: 25,
     //backgroundColor: 'grey',
     flex: 1,
     backgroundColor: '#FFFFFF',

@@ -7,15 +7,19 @@ import 'react-native-gesture-handler';
 import PhoneAuthScreen from '../screens/Phoneauth';
 import LoadingScreen from '../screens/LoadingScreen';
 import Meetscd from '../screens/Meetscd';
+
 import Contactpg from '../screens/Contactpg';
+
+import Otp from '../screens/Otp'
 
 
 const Stack = createStackNavigator();
 
 const Login = () => {
     return (
-      <Stack.Navigator>
-        <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen}/>
+      <Stack.Navigator initialRouteName="PhoneAuth">
+        <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="otp" component={Otp} options={{headerShown:false}}/>
       </Stack.Navigator>
     );
   }
