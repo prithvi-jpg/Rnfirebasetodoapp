@@ -14,12 +14,14 @@ import Header from './header';
 import firebase from 'firebase';
 import moment from 'moment';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // console.log(firebase.auth().currentUser);
 // console.log(firebase.database().ref.name);
 // console.log(firebase.auth().currentUser.phoneNumber);
 // console.log(firebase.auth().currentUser.uid);
 // console.log(firebase.auth().currentUser.displayName);
-
+import * as Contacts from 'expo-contacts';
+import * as Permissions from 'expo-permissions';
 import _ from 'lodash';
 
 
@@ -28,10 +30,13 @@ import _ from 'lodash';
 
 
 const Home = ({ navigation }) => {
+  var comparisonArr=[];
+  var finalArr=[];
   const [modalVisible, setModalVisible] = useState(false);
   const [newTask, setNewTask] = useState(' ');
   const [tasks, setTasks] = useState([]);
   const [authenticated, setAutheticated] = useState(false);
+  const [phoneContact,setPhoneContact]=useState([]);
   const [userList,setUserList]=useState([]);
   firebase.auth().onAuthStateChanged((userauth) => {
     if (userauth) {
@@ -48,20 +53,70 @@ const Home = ({ navigation }) => {
     getTasks();
     firebase.database().ref('users/').on('value',(snapshot)=>{
       const rec=snapshot.val();
-      console.log('ooo',rec)
+      // console.log('ooo',rec)
       setUserList(rec);
     })
+    firebase.database().ref('/UsersList/').on('value',(snapshot)=>{
+      const rec=snapshot.val();
+      let valToArray=_.map(rec,element=>{
+        return {...element}
+      })
+      // console.log('ppp',valToArray)
+      valToArray.map((item)=>{
+        // console.log('phone number',item.uphonenumber)
+        comparisonArr.push(item.uphonenumber);
+      })
+      // setUserList(rec);     
+    })
+    const loadContacts = async () => {
+      const permission = await Permissions.askAsync(
+        Permissions.CONTACTS
+      ); 
+      if (permission.status !== 'granted') {
+        return;
+      } 
+      const { data } = await Contacts.getContactsAsync({
+        fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails],
+        sort: Contacts.SortTypes.PhoneNumbers 
+      });
+      if(data.length>0){
+      data.forEach(contact=>{
+        if(contact.phoneNumbers){
+          contact.phoneNumbers.forEach(num => {
+            if (num.label === "mobile" || num.label === "") {
+              const phoneToAdd = num.number;
+              // console.log('ggg',phoneToAdd)
+              comparisonArr.forEach(number=>{
+                if(phoneToAdd==number){
+                  console.log('sss',phoneToAdd)
+                  finalArr=finalArr.concat(phoneToAdd)
+                  
+                }
+              })
+            }
+          });   
+        }
+      })
+      finalArr.length>0 && display(finalArr)
+      }     
+    };   
+    loadContacts();   
   }, []);
-
+  // console.log('iiï',phoneContact)
+    const display=(item)=>{
+      console.log('CVVVV',item)
+      setPhoneContact(item);
+    }
   const getTasks = () => {
     let tasksRef = firebase.database().ref('/tasks/');
-
+    // console.log('here')
     tasksRef.on('value', snapshot => {
       let val = snapshot.val();
 
       let valToArray = _.map(val, element => {
         return {...element};
       });
+      // console.log('value',valToArray)
       setTasks(valToArray);
     });
   };
@@ -84,19 +139,6 @@ const Home = ({ navigation }) => {
       .catch(err => console.log(err));
   };
 
-  // handleSubmit = () => {
-//   addItem(this.state.name);
-//   
-// };
-
-//   const insertUser = () => {
-// //     const newDatabaseRouteRef = firebase.database.ref().child('users/' + user.uid + '/routes').push()
-// // // Set the value to the key of received ref
-// // newDatabaseRouteRef.set(newDatabaseRouteRef.key)
-
-
-
-
 
   const pressHandler = () => {
     
@@ -105,7 +147,19 @@ const Home = ({ navigation }) => {
   }
 
   const pushHandler = () => {
-    navigation.navigate('Contactspage');
+    console.log('phone',phoneContact)
+    if(phoneContact){
+      navigation.navigate('Contactspage');
+    } 
+    const storeData = async (value) => {
+      try {
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem('contact', jsonValue)
+      } catch (e) {
+        // saving error
+      }
+    }
+    storeData(phoneContact)
   }
 
   const signoutHandler = () => {
@@ -114,8 +168,6 @@ const Home = ({ navigation }) => {
     }).catch((error) => {
       console.log("An error happened");
     });
-    
-
   }
 
 
@@ -164,6 +216,9 @@ const Home = ({ navigation }) => {
            <MaterialCommunityIcons name="face-profile" size={50} color="black" style={{}}/>
           <Text style={{fontSize:18}}>{userList.userName}</Text>
           </View>
+          <TouchableOpacity onPress={()=>pushHandler()}>
+            <Text>contacts</Text>
+          </TouchableOpacity>
           </View>
         )}
         <View style={{marginTop:10}}>
@@ -213,6 +268,7 @@ const Home = ({ navigation }) => {
         <Button title="Signout" onPress={signoutHandler}/>
         
       </View> */}
+       {/* <Button title="contacts" onPress={pushHandler}/> */}
     </View>
   );
 };

@@ -15,7 +15,8 @@ import * as Permissions from 'expo-permissions';
 import Expo from 'expo';
 import firebase from 'firebase';
 import { AntDesign } from '@expo/vector-icons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+let data;
 export default class Contactspage extends React.Component {
   constructor() {
     super();
@@ -26,7 +27,8 @@ export default class Contactspage extends React.Component {
     };
   }
 
-  loadContacts = async () => {
+  loadContacts = async (compare) => {
+    console.log('ccc',compare)
     const permission = await Permissions.askAsync(
       Permissions.CONTACTS
     );
@@ -39,13 +41,48 @@ export default class Contactspage extends React.Component {
       fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails]
     });
 
-    //console.log(data);
-    this.setState({ contacts: data, inMemoryContacts: data, isLoading: false });
+   data.map((item)=>{
+      if(item.phoneNumbers){
+        item.phoneNumbers.forEach(num=>{
+          if (num.label === "mobile" || num.label === "" ) {
+            const phoneToAdd = num.number;
+            // console.log('ggg',phoneToAdd)
+            compare.forEach(number=>{
+              if(phoneToAdd==number){
+                let object={
+                  'firstName':item.firstName,
+                  'lastName':item.lastName,
+                  'phoneNumbers':[
+                    phoneToAdd
+                  ]
+                }
+                var joined=this.state.contacts.concat(object);
+                this.setState({ contacts: [...new Set(joined)], isLoading: false });
+              }
+            })
+          }
+        })
+      }
+    })
+    // this.setState({ contacts: data, inMemoryContacts: data, isLoading: false });
   };
 
   componentDidMount() {
     this.setState({ isLoading: true });
-    this.loadContacts();
+    const getData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('contact')
+        if(jsonValue!==null){
+          data=JSON.parse(jsonValue)
+        }
+         console.log('data',data)
+         data && this.loadContacts(data)
+      } catch(e) {
+        console.log('r',e)
+      }
+    }
+    getData()
+    
   }
   
   renderItem = ({ item,index }) => (   
@@ -76,6 +113,7 @@ export default class Contactspage extends React.Component {
   };
   
   render() {
+    console.log('fgfgfgfg',this.state.contacts)
     return (
       <SafeAreaView >
         <View style={{flexDirection:'row'}}>
@@ -124,23 +162,25 @@ export default class Contactspage extends React.Component {
               <ActivityIndicator size="large" color="#bad555" />
             </View>
           ) : null}
-          <FlatList
-            data={this.state.contacts}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={() => (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: 50
-                }}
-              >
-                <Text style={{ color: '#bad555' }}>No Contacts Found</Text>
-              </View>
-            )}
-          />
+          {this.state.contacts && (
+           <FlatList
+           data={this.state.contacts}
+           renderItem={this.renderItem}
+           keyExtractor={(item, index) => index.toString()}
+           ListEmptyComponent={() => (
+             <View
+               style={{
+                 flex: 1,
+                 alignItems: 'center',
+                 justifyContent: 'center',
+                 marginTop: 50
+               }}
+             >
+               <Text style={{ color: '#bad555' }}>No Contacts Found</Text>
+             </View>
+           )}
+         />
+          )}
           </View>
       </SafeAreaView>
     );
