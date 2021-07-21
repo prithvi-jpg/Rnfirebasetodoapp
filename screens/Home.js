@@ -182,7 +182,7 @@ const Home = ({ navigation }) => {
         </View>
         </View>
        </View>
-      {/* <Modal visible={modalVisible}>
+      <Modal visible={modalVisible}>
         <View style={styles.modal}>
           <TextInput
             style={styles.textInput}
@@ -204,16 +204,16 @@ const Home = ({ navigation }) => {
             <Displaytasks userobj = {item} /> 
           )
         }
-        /> */}
+        />
 
-      {/* </View> */}
-      {/* <View style={styles.buttonSection}>
+      </View>
+      <View style={styles.buttonSection}>
         <Button title="Add task" onPress={() => setModalVisible(true)} />
         <Button title="go to calendar page" onPress={pressHandler}/>
         <Button title="contacts" onPress={pushHandler}/>
         <Button title="Signout" onPress={signoutHandler}/>
         
-      </View> */}
+      </View>
     </View>
   );
 };
