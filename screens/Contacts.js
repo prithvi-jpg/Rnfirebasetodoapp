@@ -28,7 +28,6 @@ export default class Contactspage extends React.Component {
   }
 
   loadContacts = async (compare) => {
-    console.log('ccc',compare)
     const permission = await Permissions.askAsync(
       Permissions.CONTACTS
     );
@@ -36,7 +35,6 @@ export default class Contactspage extends React.Component {
     if (permission.status !== 'granted') {
       return;
     }
-
     const { data } = await Contacts.getContactsAsync({
       fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails]
     });

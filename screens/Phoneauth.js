@@ -87,13 +87,24 @@ export default function PhoneAuthScreen({navigation}) {
               setVerifyInProgress(false);
               setVerificationId(verificationId);
               function storeUserNamewithPhone(userName,phone) {
-                firebase
-                  .database()
-                  .ref('users/')
-                  .set({
-                    userName: userName,
-                    phone:phone
-                  });
+                // firebase
+                //   .database()
+                //   .ref('users/')
+                //   .set({
+                //     userName: userName,
+                //     phone:phone
+                //   });
+                let userRef = firebase.database().ref('users/');
+                let signedInUser= userRef.push();
+
+                let obj = {
+                  userName: userName,
+                  phone:phone
+                };
+
+                signedInUser
+                .set(obj)
+                .catch(err => console.log(err));
               }
               storeUserNamewithPhone(userName,phoneNumber)
               navigation.navigate('otp',{verificationId:verificationId})
