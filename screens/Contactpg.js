@@ -45,10 +45,22 @@ export default function Contactpg({ navigation }) {
     loadContacts();
   }, [])
 
-  const onPress = () => {
-     // this.props.navigation.navigate('ContactDetailPage', { contact: item, detailParam:item.name})
-    navigation.navigate('Meetscd')
-  }
+  //onPress navigate to Meetscd and pass in phonenumber 
+  const onPress = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CONTACTS);
+    if (status === 'granted') {
+      const { data } = await Contacts.getContactsAsync({
+        fields: [Contacts.Fields.PhoneNumbers],
+      });
+      if (data.length > 0) {
+        navigation.navigate('Meetscd', {
+          Userph: data[0].phoneNumbers[0].number,
+        });
+      }
+    }
+  };
+
+
 
 
   const renderItem = ({ item,index }) => (   

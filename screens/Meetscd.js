@@ -1,11 +1,17 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
+//get phonenumber from Contactpg.js through route,params and display it
+//get name from Contactpg.js through route,params and display it
+
 const Meetscd = ({ route, navigation }) => {
+  // Get the param Userph passed to the component
+  const { Userph } = route.params;
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>
         Meeting scheduler page! 🎉
+        phonenumber: {JSON.stringify(Userph)}
       </Text>
     </View>
   );
