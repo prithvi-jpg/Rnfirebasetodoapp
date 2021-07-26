@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderStyleInterpolators } from '@react-navigation/stack';
 import Home from '../screens/Home';
 import Calendar from '../screens/Calendar';
-import Contactspage from '../screens/Contacts';
 import 'react-native-gesture-handler';
 import PhoneAuthScreen from '../screens/Phoneauth';
 import LoadingScreen from '../screens/LoadingScreen';
 import Meetscd from '../screens/Meetscd';
+import Chatscd from '../screens/Chatcsd';
+
+import Contactpg from '../screens/Contactpg';
+
 import Otp from '../screens/Otp'
+
 
 const Stack = createStackNavigator();
 
@@ -34,27 +38,15 @@ export default function Navi() {
               <Stack.Screen name='Loading' component={LoadingScreen} options={{ headerShown: false }}/>
               <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
               <Stack.Screen name="Calendar" component={Calendar} />
-              <Stack.Screen name="Contactspage" component={Contactspage} options={{headerShown:false}}/>
-              {/* <Stack.Screen name="Meetscd" component={Meetscd} /> */}
+              <Stack.Screen name="Contactpg" component={Contactpg} options={{ headerShown: false }} />
+              <Stack.Screen name="Meetscd" component={Meetscd} options={
+                ({ route }) => ({ title: route.params.Userph, headerTitleStyle:{color: 'white'},headerStyle: { backgroundColor: '#48434B' }})
+                }/>
+              <Stack.Screen name="Chatscd" component={Chatscd} options={({ route }) => ( { title: route.params.Userph } )  }/>
               
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-// export default Navigator;
-// const screens = {
-//     Home: {
-//         screen: Home
-//     },
-//     Calendar: {
-//         screen: Calendar
-//     },
-//     Contactspage: {
-//         screen: Contactspage
-//     }
-// }
 
-// const HomeStack = createStackNavigator (screens);
-
-// export default createAppContainer(HomeStack);

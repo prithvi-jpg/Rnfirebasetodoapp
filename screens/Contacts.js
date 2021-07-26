@@ -25,7 +25,8 @@ export default class Contactspage extends React.Component {
       isLoading: false,
       contacts: [],
       tabSelected:'people',
-      invite:''
+      invite:'',
+      userphoneNumber: '',
     };
   }
   
@@ -73,6 +74,12 @@ export default class Contactspage extends React.Component {
     getData()  
   }
 
+  onPress = () => {
+    // this.navigation.navigate('Meetscd');
+     // this.props.navigation.navigate('ContactDetailPage', { contact: item, detailParam:item.name})
+    this.props.navigation.navigate('Meetscd')
+  }
+  
   renderItem = ({ item,index }) => (
     <View style={index%2==0?{ backgroundColor:'#ECF4F7',minHeight: 50,flexDirection:'row',justifyContent:'space-between' }:{backgroundColor:'white',minHeight:50,flexDirection:'row',justifyContent:'space-between'}}>
       <View style={{flexDirection:'row'}}>
@@ -89,8 +96,8 @@ export default class Contactspage extends React.Component {
      {item.phoneNumbers && item.phoneNumbers[0] && item.phoneNumbers[0].number==this.state.invite &&(
        <Text style={{padding:15,borderRadius:12,borderTopWidth:2,borderLeftWidth:2,borderRightWidth:2,borderBottomWidth:5}}>Invite</Text>
      )}
-    </View>
-    )
+     </View>
+  )
     
   searchContacts = value => {
     const filteredContacts = this.state.inMemoryContacts.filter(contact => {
@@ -99,7 +106,6 @@ export default class Contactspage extends React.Component {
         ' ' +
         contact.lastName
       ).toLowerCase();
-
       let searchTermLowercase = value.toLowerCase();
       return contactLowercase.indexOf(searchTermLowercase) > -1;
     });
@@ -107,9 +113,6 @@ export default class Contactspage extends React.Component {
   };
   
   render() {
-    console.log('data',data)
-    
-
     return (
       <SafeAreaView >
         <View style={{flexDirection:'row'}}>

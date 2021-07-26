@@ -13,6 +13,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 import _ from 'lodash';
 import firebase from 'firebase';
+// const { auth } = useContext(FirebaseContext);
  
 export default function Calendar({ route, navigation }) {
 
@@ -21,7 +22,7 @@ export default function Calendar({ route, navigation }) {
   const startDate = selectedStartDate ? selectedStartDate.toString() : '';
   const onDateChange = (date, type) => {
       setSelectedStartDate(date);
-      //console.log(selectedStartDate);
+      // console.log(selectedStartDate);
   };
 
 
@@ -56,23 +57,6 @@ export default function Calendar({ route, navigation }) {
     }
      return <View />;
   }
-
-  // const Displaytasks = ({tasksobj}) => {
-  //     return <Text style={styles.item}>{tasksobj.task} </Text>
-  // }
-
-  //tries to show list of taks for only the selected date..
-  // const Displaytasks = ({tasksobj}) => {
-  //   if (tasksobj.user == 1 && tasksobj.date == selectedStartDate){
-  //     return <Text style={styles.item}>{tasksobj.task} </Text>
-  //   }
-  //    return <View />;
-  // }
-
-
-  
-  
-
 
   return (
     <View style={styles.container}>

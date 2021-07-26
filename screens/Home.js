@@ -45,7 +45,7 @@ const Home = ({ navigation }) => {
   });
 
   let authedUser = firebase.auth().currentUser.uid;
-  let today = moment().set({'hour':12,'minute':0,'second':0,'millisecond':0}) .toString();
+  let today = moment().set({'hour':12,'minute':0,'second':0,'millisecond':0}).toString();
   // console.log(authedUser);
   // const [user, setUser] = useState();
 
@@ -158,7 +158,7 @@ const Home = ({ navigation }) => {
     }
     if(phoneContact){
       storeData(phoneContact)
-      navigation.navigate('Contactspage');
+      navigation.navigate('Contactpg');
     } 
     
     
@@ -259,13 +259,13 @@ const Home = ({ navigation }) => {
         />
 
       </View>
-      <View style={styles.buttonSection}>
-        {/* <Button title="Add task" onPress={() => setModalVisible(true)} />
+      {/* <View style={styles.buttonSection}>
+        <Button title="Add task" onPress={() => setModalVisible(true)} />
         <Button title="go to calendar page" onPress={pressHandler}/>
         <Button title="contacts" onPress={pushHandler}/>
-        <Button title="Signout" onPress={signoutHandler}/> */}
+        <Button title="Signout" onPress={signoutHandler}/> 
         
-      </View>
+      </View> */}
     </View>
   );
 };
