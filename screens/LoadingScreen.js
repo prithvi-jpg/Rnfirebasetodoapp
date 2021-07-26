@@ -15,7 +15,6 @@ export default LoadingScreen = ({ navigation }) => {
                 uid: UserId,
                 uphonenumber: UserPhno
             }).then((data)=>{
-                    console.log('data success ' , data)
                 }).catch((error)=>{
                     console.log('error ' , error)
     });

@@ -89,14 +89,14 @@ const Home = ({ navigation }) => {
               comparisonArr.forEach(number=>{
                 if(phoneToAdd==number){
                   console.log('sss',phoneToAdd)
-                  finalArr=finalArr.concat(phoneToAdd)
-                  
+                  finalArr=finalArr.concat(phoneToAdd)      
                 }
               })
             }
           });   
         }
       })
+      console.log(1,finalArr)
       finalArr.length>0 && display(finalArr)
       }     
     };   
@@ -104,7 +104,7 @@ const Home = ({ navigation }) => {
   }, []);
   // console.log('iiï',phoneContact)
     const display=(item)=>{
-      console.log('CVVVV',item)
+      console.log(2)
       setPhoneContact(item);
     }
   const getTasks = () => {
@@ -148,9 +148,6 @@ const Home = ({ navigation }) => {
 
   const pushHandler = () => {
     console.log('phone',phoneContact)
-    if(phoneContact){
-      navigation.navigate('Contactspage');
-    } 
     const storeData = async (value) => {
       try {
         const jsonValue = JSON.stringify(value)
@@ -159,7 +156,12 @@ const Home = ({ navigation }) => {
         // saving error
       }
     }
-    storeData(phoneContact)
+    if(phoneContact){
+      storeData(phoneContact)
+      navigation.navigate('Contactspage');
+    } 
+    
+    
   }
 
   const signoutHandler = () => {
@@ -173,7 +175,6 @@ const Home = ({ navigation }) => {
 
   const updateTask = item => {
     let taskRef = firebase.database().ref('/tasks/' + item.id);
-
     taskRef
       .update({done: !item.done})
       .then(res => console.log(res))
@@ -198,13 +199,7 @@ const Home = ({ navigation }) => {
     }
      return <View />;
   }
-  // const renderItem=({item})=>{
-  //   console.log('aaa',item.userName)
-  //   return(
-  //     <Text style={{color:'black'}}>{item.userName}</Text>
-  //   )
-  // }
-  console.log('userlist',userList.userName)
+  
   return (
     <View style={styles.conatainer}>
        <Header navigation={navigation}/>
@@ -213,11 +208,14 @@ const Home = ({ navigation }) => {
         {userList!==[] && (
           <View style={{flexDirection:'row'}}>
           <View style={{justifyContent:'center',alignItems:'center'}}>
-           <MaterialCommunityIcons name="face-profile" size={50} color="black" style={{}}/>
+           <View style={{height:50,width:50,borderRadius:25,borderWidth:0.5,justifyContent:'center',alignItems:'center',backgroundColor:'#'+Math.random().toString(16).substr(2,6)!=='#000000' || '#'+Math.random().toString(16).substr(2,6)!=='#FFFFFF'  && '#'+Math.random().toString(16).substr(2,6)}}>
+             <Text style={{textAlign:'center',fontSize:18}}>{userList.userName ? userList.userName.charAt(0):'C'}</Text>
+           </View>
           <Text style={{fontSize:18}}>{userList.userName}</Text>
           </View>
-          <TouchableOpacity onPress={()=>pushHandler()}>
-            <Text>contacts</Text>
+          <TouchableOpacity onPress={()=>pushHandler()} style={{height:50,width:50,borderRadius:25,borderWidth:0.5,justifyContent:'center',alignItems:'center',backgroundColor:'#'+Math.random().toString(16).substr(2,6)!=='#000000' || '#'+Math.random().toString(16).substr(2,6)!=='#FFFFFF'  && '#'+Math.random().toString(16).substr(2,6),marginLeft:5}}
+          disabled={phoneContact.length>1?true:false}>
+            <Text style={{textAlign:'center',fontSize:17}}>More</Text>
           </TouchableOpacity>
           </View>
         )}
@@ -236,7 +234,7 @@ const Home = ({ navigation }) => {
         </View>
         </View>
        </View>
-      {/* <Modal visible={modalVisible}>
+      <Modal visible={modalVisible}>
         <View style={styles.modal}>
           <TextInput
             style={styles.textInput}
@@ -258,17 +256,16 @@ const Home = ({ navigation }) => {
             <Displaytasks userobj = {item} /> 
           )
         }
-        /> */}
+        />
 
-      {/* </View> */}
-      {/* <View style={styles.buttonSection}>
-        <Button title="Add task" onPress={() => setModalVisible(true)} />
+      </View>
+      <View style={styles.buttonSection}>
+        {/* <Button title="Add task" onPress={() => setModalVisible(true)} />
         <Button title="go to calendar page" onPress={pressHandler}/>
         <Button title="contacts" onPress={pushHandler}/>
-        <Button title="Signout" onPress={signoutHandler}/>
+        <Button title="Signout" onPress={signoutHandler}/> */}
         
-      </View> */}
-       {/* <Button title="contacts" onPress={pushHandler}/> */}
+      </View>
     </View>
   );
 };
@@ -312,6 +309,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     // alignItems: 'center',
+    marginTop:15
   },
   buttonSection: {
     height: 150,
@@ -332,13 +330,14 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   item: {
-    padding: 16,
-    marginTop: 16,
-    borderColor: '#bbb',
-    borderWidth: 2,
-    borderStyle: "dashed",
-    borderRadius: 1,
-    borderRadius: 10,
+    borderColor:'black',
+    borderRadius:16,
+    borderTopWidth:2,
+    borderLeftWidth:2,borderRightWidth:2,
+    borderBottomWidth:5,
+    padding:24,
+    margin:8,
+    fontSize:18
   }
 });
 export default Home;

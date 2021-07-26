@@ -17,16 +17,18 @@ import firebase from 'firebase';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let data;
+let invite="";
 export default class Contactspage extends React.Component {
   constructor() {
     super();
     this.state = {
       isLoading: false,
       contacts: [],
-      tabSelected:'people'
+      tabSelected:'people',
+      invite:''
     };
   }
-
+  
   loadContacts = async (compare) => {
     const permission = await Permissions.askAsync(
       Permissions.CONTACTS
@@ -38,31 +40,19 @@ export default class Contactspage extends React.Component {
     const { data } = await Contacts.getContactsAsync({
       fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails]
     });
-
-   data.map((item)=>{
-      if(item.phoneNumbers){
-        item.phoneNumbers.forEach(num=>{
-          if (num.label === "mobile" || num.label === "" ) {
-            const phoneToAdd = num.number;
-            // console.log('ggg',phoneToAdd)
-            compare.forEach(number=>{
-              if(phoneToAdd==number){
-                let object={
-                  'firstName':item.firstName,
-                  'lastName':item.lastName,
-                  'phoneNumbers':[
-                    phoneToAdd
-                  ]
-                }
-                var joined=this.state.contacts.concat(object);
-                this.setState({ contacts: [...new Set(joined)], isLoading: false });
-              }
-            })
+    this.setState({ contacts: data, inMemoryContacts: data, isLoading: false });
+    this.state.contacts && this.state.contacts.map((item)=>{
+      if(item.phoneNumbers && item.phoneNumbers[0]){
+        for(let i=0;i<compare.length;i++){
+          if(item.phoneNumbers[0].number==compare[i]){
+           console.log('wohoo',item.phoneNumbers[0].number)
+           this.setState({
+             invite:item.phoneNumbers[0].number
+           })
           }
-        })
+        }
       }
     })
-    // this.setState({ contacts: data, inMemoryContacts: data, isLoading: false });
   };
 
   componentDidMount() {
@@ -73,29 +63,35 @@ export default class Contactspage extends React.Component {
         if(jsonValue!==null){
           data=JSON.parse(jsonValue)
         }
-         console.log('data',data)
+        console.log('data',data)
          data && this.loadContacts(data)
+        
       } catch(e) {
         console.log('r',e)
       }
     }
-    getData()
-    
+    getData()  
   }
-  
-  renderItem = ({ item,index }) => (   
-    <View style={{ minHeight: 25 }}>
-      <Text style={index%2==0?{backgroundColor:'#ECF4F7',fontSize:14,padding:15}:{backgroundColor:'white',fontSize:14,padding:15}}>
+
+  renderItem = ({ item,index }) => (
+    <View style={index%2==0?{ backgroundColor:'#ECF4F7',minHeight: 50,flexDirection:'row',justifyContent:'space-between' }:{backgroundColor:'white',minHeight:50,flexDirection:'row',justifyContent:'space-between'}}>
+      <View style={{flexDirection:'row'}}>
+        <View style={{height:50,width:50,borderRadius:25,borderWidth:0.5,justifyContent:'center',alignItems:'center',backgroundColor:'#'+Math.random().toString(16).substr(2,6)!=='#000000' || '#'+Math.random().toString(16).substr(2,6)!=='#FFFFFF'  && '#'+Math.random().toString(16).substr(2,6),margin:5}}>
+         {item.firstName ? <Text style={{fontSize:15}}>{item.firstName.charAt(0)}</Text>:(
+           <Text style={{fontSize:15}}>U</Text>
+         )}
+        </View>
+      <Text style={{fontSize:14,padding:15}}>
         {item.firstName + ' '}
         {item.lastName}
       </Text>
-      {/* {console.log('item',item)} */}
-      {/* <Text style={{ color: '#000000'}}>
-        {item.phoneNumbers[0].number}
-      </Text> */}
+      </View>
+     {item.phoneNumbers && item.phoneNumbers[0] && item.phoneNumbers[0].number==this.state.invite &&(
+       <Text style={{padding:15,borderRadius:12,borderTopWidth:2,borderLeftWidth:2,borderRightWidth:2,borderBottomWidth:5}}>Invite</Text>
+     )}
     </View>
-  );
-
+    )
+    
   searchContacts = value => {
     const filteredContacts = this.state.inMemoryContacts.filter(contact => {
       let contactLowercase = (
@@ -111,14 +107,15 @@ export default class Contactspage extends React.Component {
   };
   
   render() {
-    console.log('fgfgfgfg',this.state.contacts)
+    console.log('data',data)
+    
+
     return (
       <SafeAreaView >
         <View style={{flexDirection:'row'}}>
         <AntDesign name="arrowleft" size={20} color="black" style={{marginTop:43,marginLeft:5}}/>
         <Text style={{fontSize:22,color:'black',marginTop:40,marginLeft:5}}>Back</Text>
-        </View>
-        
+        </View>       
         <View style={{padding:10}}>
         <TextInput
            placeholder="Search People to invite"

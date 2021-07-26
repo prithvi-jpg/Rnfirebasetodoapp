@@ -50,7 +50,7 @@ export default function PhoneAuthScreen({navigation}) {
           // keyboardType="name-phone-pad"
           // textContentType="telephoneNumber"
           placeholder="Name"
-          placeholderTextColor='black'
+          placeholderTextColor='grey'
           // editable={!verificationId}
           onChangeText={name => setUserName(name)}
         />
@@ -63,8 +63,8 @@ export default function PhoneAuthScreen({navigation}) {
           autoCompleteType="tel"
           keyboardType="phone-pad"
           textContentType="telephoneNumber"
-          placeholder="Phone no."
-          placeholderTextColor='black'
+          placeholder="+919999999999"
+          placeholderTextColor='grey'
           editable={!verificationId}
           onChangeText={phoneNumber => setPhoneNumber(phoneNumber.replace(/\s+/g, ''))}
         />
