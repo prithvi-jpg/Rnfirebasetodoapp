@@ -9,13 +9,15 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  Image
 } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 import firebase from 'firebase';
-
+import { Audio } from 'expo-av';
 
 const Chatscd = ({route,navigation}) => {
+  const [recording, setRecording] = React.useState();
  const { Userph } = route.params;
  const { liDate } = route.params; //this is an object be careful with the use of this variable format or Json.stringify it
   //display the params Userph and liDate
@@ -51,14 +53,47 @@ const Chatscd = ({route,navigation}) => {
 
 //  }
     
+async function startRecording() {
+  try {
+    console.log('Requesting permissions..');
+    await Audio.requestPermissionsAsync();
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: true,
+      playsInSilentModeIOS: true,
+    }); 
+    console.log('Starting recording..');
+    const { recording } = await Audio.Recording.createAsync(
+       Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+    );
+    setRecording(recording);
+    console.log('Recording started');
+  } catch (err) {
+    console.error('Failed to start recording', err);
+  }
+}
 
+async function stopRecording() {
+  console.log('Stopping recording..');
+  setRecording(undefined);
+  await recording.stopAndUnloadAsync();
+  const uri = recording.getURI(); 
+  console.log('Recording stopped and stored at', uri);
+}
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>
-         🎉
-         {Userph} {liDate.format("hh:mm A")}
-         
-      </Text>
+    <View style={{ flex: 1,padding:15}}>
+      <View style={{backgroundColor:'#D6FCF7',padding:10,borderColor:'black',borderTopWidth:2,borderRightWidth:2,borderLeftWidth:2,borderBottomWidth:5,borderRadius:10,height:'90%'}}>
+        <Text style={{backgroundColor:'white',borderColor:'black',borderRadius:10,borderLeftWidth:2,borderBottomWidth:5,borderTopWidth:2,borderRightWidth:2,padding:5,textAlign:'center',width:100,fontSize:15}}>{moment().format("HH:mm A")}</Text>
+        <Image source={require('../assets/audio_background.png')} style={{width:300,height:200,marginTop:'50%'}} resizeMode="contain"/>
+        {/* <TouchableOpacity style={{justifyContent:'center',alignItems:'center'}}  onPress={recording ? stopRecording : startRecording}>
+          <Image source={require('../assets/audio.png')} style={{height:72,width:72}}/>
+        </TouchableOpacity> */}
+        <View style={{position:'absolute',bottom:10,borderRadius:66,borderColor:'black',borderWidth:1,width:'100%',padding:10,backgroundColor:'white',left:'4%'}}>
+        <TextInput placeholder="Type your message"/>
+      </View>
+      </View>
+      <View style={{position:'absolute',width:'100%',bottom:0,padding:10,backgroundColor:'black',borderRadius:10,justifyContent:'center',alignItems:'center',left:'4%'}}>
+        <Text style={{fontSize:18,color:'white',fontWeight:'bold'}}>Confirm</Text>
+      </View>
     </View>
   );
 }

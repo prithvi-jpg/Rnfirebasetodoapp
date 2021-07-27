@@ -9,10 +9,12 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  ScrollView
 } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 import firebase from 'firebase';
+import { letterSpacing } from 'styled-system';
 
 
 //get phonenumber from Contactpg.js through route,params and display it
@@ -34,42 +36,46 @@ const Meetscd = ({ route, navigation }) => {
 
   //DATE DATA Array
 
-  var DATA = [];
+  let DATA = [];
   if (selectedStartDate){
-    var a = selectedStartDate.hour(10).minute(30).second(0);
-    let obj = {
+    let a = selectedStartDate.hour(10).minute(30).second(0).format("hh:mm A");
+    console.log('a',a)
+    let obj1 = {
       id: "1",
       liDate: a,
     }
-    DATA=[...DATA,obj];
+    DATA=[...DATA,obj1];
   }
   else{
     console.log("no date selected errororo");
   }
   if (selectedStartDate){
-    var b = selectedStartDate.hour(12).minute(0).second(0);
-    let obj = {
+    let b = selectedStartDate.hour(12).minute(0).second(0).format("hh:mm A");
+    console.log('b',b)
+    let obj2 = {
       id: "2",
       liDate: b,
     }
-    DATA=[...DATA,obj];
+    DATA=[...DATA,obj2];
   }
   else{
     console.log("no date selected errororo");
   }
   if (selectedStartDate){
-    var c = selectedStartDate.hour(3).minute(30).second(0);
-    let obj = {
+    let c = selectedStartDate.hour(3).minute(30).second(0).format("hh:mm A");
+    console.log('c',c)
+    let obj3 = {
       id: "3",
       liDate: c,
     }
-    DATA=[...DATA,obj];
+    DATA=[...DATA,obj3];
   }
   else{
     console.log("no date selected errororo");
   }
   if (selectedStartDate){
-    var d = selectedStartDate.hour(7).minute(30).second(0);
+    let d = selectedStartDate.hour(17).minute(30).second(0).format("hh:mm A");
+    console.log('d',d)
     let obj = {
       id: "4",
       liDate: d,
@@ -79,17 +85,17 @@ const Meetscd = ({ route, navigation }) => {
   else{
     console.log("no date selected errororo");
   }
-  // console.log(DATA);
-
+  console.log('aaa',DATA);
+// console.log(a,b,c,d)
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <Text style={[styles.Datelist, textColor]}>{item.liDate.format("hh:mm A")}</Text>
+      <Text style={[styles.Datelist, textColor]}>{item.liDate}</Text>
     </TouchableOpacity>
   );
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#6B8CCE" : "#F5FCFE";
+    const backgroundColor = item.id === selectedId ? "pink" : "white";
     const color = item.id === selectedId ? 'white' : 'black';
 
 
@@ -101,6 +107,7 @@ const Meetscd = ({ route, navigation }) => {
           setSelectedId(item.id);
           navigation.navigate('Chatscd', { Userph: Userph, liDate: item.liDate });
         }}
+        
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />
@@ -112,6 +119,7 @@ const Meetscd = ({ route, navigation }) => {
       <Text style={styles.dispMessage}>
         Schedule a Meeting with {JSON.stringify(Userph)},
       </Text>
+      
       <View style={styles.calContainer}>
       <CalendarPicker
         selectedDayColor="#6B8CCE"
@@ -122,19 +130,22 @@ const Meetscd = ({ route, navigation }) => {
       />
       </View>
       <Text style={styles.dispMeetMessage}>
-        Select the time available,
+        Select the time available
       </Text>
-      <View>
+      {/* <View>
         <Text>SELECTED START DATE:{startDate}</Text>
-      </View>
+      </View> */}
       <SafeAreaView style={styles.listContainer}>
+        <ScrollView>
       <FlatList
         data={DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         extraData={selectedId}
       />
+      </ScrollView>
     </SafeAreaView>
+    
     </View>
   );
 }
@@ -171,7 +182,7 @@ const styles = StyleSheet.create({
     top: 340,
   },
   listContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     position: 'absolute',
     top: 370,
@@ -180,10 +191,12 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
-    borderColor: '#bbb',
-    borderWidth: 2,
-    borderStyle: "dashed",
+    borderColor:'black',
     borderRadius: 10,
+    borderLeftWidth:2,
+    borderTopWidth:2,
+    borderRightWidth:2,
+    borderBottomWidth:5
   },
   Datelist: {
     fontSize: 32,
