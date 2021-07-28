@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
   FlatList,
+  Alert,
   TouchableOpacity,
   Image
 } from 'react-native';
@@ -18,6 +19,7 @@ import { Audio } from 'expo-av';
 
 const Chatscd = ({route,navigation}) => {
   const [recording, setRecording] = React.useState();
+  const [chatText,setChatText]=useState("");
  const { Userph } = route.params;
  const { liDate } = route.params; //this is an object be careful with the use of this variable format or Json.stringify it
   //display the params Userph and liDate
@@ -52,6 +54,41 @@ const Chatscd = ({route,navigation}) => {
 //      }
 
 //  }
+
+const insertTask = () => {
+  console.log(1)
+  let tasksRef = firebase.database().ref('/tasks/');
+  let createdTask = tasksRef.push();
+  console.log(2)
+  let task = {id: createdTask.key, task: chatText, done: false, date:moment().format("MM ddd, YYYY hh:mm:ss a"), user: Userph};
+  console.log(3)
+  createdTask
+    .set(task)
+    .then(res => {
+      // Alert.alert('Task successfully created', [
+      //   {
+      //     text: 'Close',
+      //     // onPress: () => navigation.navigate('Home'),
+      //     onPress: () => navigation.navigate('Home'),
+      //   },
+      // ]);
+      console.log('res',res)
+    })
+    .catch(err => console.log(err));
+    Alert.alert(
+      "Chits",
+      "Task is successfully created",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => navigation.navigate('Home') }
+      ]
+    );
+    console.log(4)
+};
     
 async function startRecording() {
   try {
@@ -88,12 +125,13 @@ async function stopRecording() {
           <Image source={require('../assets/audio.png')} style={{height:72,width:72}}/>
         </TouchableOpacity> */}
         <View style={{position:'absolute',bottom:10,borderRadius:66,borderColor:'black',borderWidth:1,width:'100%',padding:10,backgroundColor:'white',left:'4%'}}>
-        <TextInput placeholder="Type your message"/>
+        <TextInput placeholder="Type your message" value={chatText} onChangeText={e=>setChatText(e)}/>
       </View>
       </View>
-      <View style={{position:'absolute',width:'100%',bottom:0,padding:10,backgroundColor:'black',borderRadius:10,justifyContent:'center',alignItems:'center',left:'4%'}}>
+      <TouchableOpacity style={{position:'absolute',width:'100%',bottom:0,padding:10,backgroundColor:'black',borderRadius:10,justifyContent:'center',alignItems:'center',left:'4%'}}
+      onPress={()=>insertTask()}>
         <Text style={{fontSize:18,color:'white',fontWeight:'bold'}}>Confirm</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
