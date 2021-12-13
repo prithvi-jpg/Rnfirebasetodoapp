@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // console.log(firebase.auth().currentUser.displayName);
 import * as Contacts from 'expo-contacts';
 import * as Permissions from 'expo-permissions';
+import * as Notifications from 'expo-notifications';
 import _ from 'lodash';
 
 
@@ -48,6 +49,32 @@ const Home = ({ navigation }) => {
   let today = moment().set({'hour':12,'minute':0,'second':0,'millisecond':0}).toString();
   // console.log(authedUser);
   // const [user, setUser] = useState();
+  // Get registration token. Initially this makes a network call, once retrieved
+// subsequent calls to getToken will return from cache.
+  // async function registerForPushNotificationsAsync() {
+  //   const { status: existingStatus } = await Permissions.getAsync(
+  //     Permissions.NOTIFICATIONS
+  //   );
+  //   let finalStatus = existingStatus;
+  //   // only ask if permissions have not already been determined, because
+  //   // iOS won't necessarily prompt the user a second time.
+  //   if (existingStatus !== 'granted') {
+  //     // Android remote notification permissions are granted during the app
+  //     // install, so this will only ask on iOS
+  //     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+  //     finalStatus = status;
+  //   }
+  //   // Stop here if the user did not grant permissions
+  //   if (finalStatus !== 'granted') {
+  //     return;
+  //   }
+  //   // Get the token that uniquely identifies this device
+  //   let token = await Notifications.getExpoPushTokenAsync();
+  //   // console.log(token);
+  //   // POST the token to your backend server from where you can retrieve it to send push notifications.
+  //   return token;
+  // }
+
 
   useEffect(() => {
     getTasks();
@@ -194,7 +221,7 @@ const Home = ({ navigation }) => {
 
   //userobj.user == autduser.id
   const Displaytasks = ({userobj}) => {
-    if (userobj.user == authedUser){
+    if (userobj.user1 == authedUser){
       return <Text style={styles.item}>{userobj.task} </Text>
     }
      return <View />;
@@ -213,6 +240,9 @@ const Home = ({ navigation }) => {
            </View>
           <Text style={{fontSize:18}}>{userList.userName}</Text>
           </View>
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={{height:50,width:50,borderRadius:25,borderWidth:0.5,justifyContent:'center',alignItems:'center',backgroundColor:'#'+Math.random().toString(16).substr(2,6)!=='#000000' || '#'+Math.random().toString(16).substr(2,6)!=='#FFFFFF'  && '#'+Math.random().toString(16).substr(2,6),marginLeft:5}}>
+            <Text style={{textAlign:'center',fontSize:17}}>Add Task</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={()=>pushHandler()} style={{height:50,width:50,borderRadius:25,borderWidth:0.5,justifyContent:'center',alignItems:'center',backgroundColor:'#'+Math.random().toString(16).substr(2,6)!=='#000000' || '#'+Math.random().toString(16).substr(2,6)!=='#FFFFFF'  && '#'+Math.random().toString(16).substr(2,6),marginLeft:5}}
           disabled={phoneContact.length>1?true:false}>
             <Text style={{textAlign:'center',fontSize:17}}>More</Text>
@@ -260,12 +290,12 @@ const Home = ({ navigation }) => {
 
       </View>
       {/* <View style={styles.buttonSection}>
-        <Button title="Add task" onPress={() => setModalVisible(true)} />
-        <Button title="go to calendar page" onPress={pressHandler}/>
+        <Button title="Add task" onPress={() => setModalVisible(true)} /> */}
+        {/* <Button title="go to calendar page" onPress={pressHandler}/>
         <Button title="contacts" onPress={pushHandler}/>
-        <Button title="Signout" onPress={signoutHandler}/> 
+        <Button title="Signout" onPress={signoutHandler}/>  */}
         
-      </View> */}
+      {/* </View> */}
     </View>
   );
 };
@@ -338,6 +368,7 @@ const styles = StyleSheet.create({
     padding:24,
     margin:8,
     fontSize:18
+    
   }
 });
 export default Home;

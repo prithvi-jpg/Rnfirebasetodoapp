@@ -18,12 +18,14 @@ import firebase from 'firebase';
 export default function Calendar({ route, navigation }) {
 
   let authedUser = firebase.auth().currentUser.uid;
+  // console.log(authedUser);
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const startDate = selectedStartDate ? selectedStartDate.toString() : '';
   const onDateChange = (date, type) => {
       setSelectedStartDate(date);
       // console.log(selectedStartDate);
   };
+  // console.log(firebase.auth().currentUser.phoneNumber);
 
 
   const [tasks, setTasks] = useState([]);
@@ -43,16 +45,16 @@ export default function Calendar({ route, navigation }) {
         return {...element};
       });
       setTasks(valToArray);
+      // console.log(valToArray);
     });
   };
 
- 
 
   const keyExtractor = (item, index) => index.toString();
 
 
   const Displaytasks = ({tasksobj}) => {
-    if (tasksobj.user == authedUser){
+    if (tasksobj.user1 == authedUser || tasksobj.user2 == authedUser){
       return <Text style={styles.item}>{tasksobj.task} </Text>
     }
      return <View />;
@@ -66,9 +68,9 @@ export default function Calendar({ route, navigation }) {
         todayBackgroundColor="#91afed"
         onDateChange={onDateChange}
       />
-      <View>
+      {/* <View>
         <Text>SELECTED START DATE:{startDate}</Text>
-      </View>
+      </View> */}
       <View style={styles.listSection}>
       <FlatList
           keyExtractor={keyExtractor}
@@ -96,13 +98,17 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   item: {
-    padding: 16,
-    marginTop: 16,
-    borderColor: '#bbb',
-    borderWidth: 2,
-    borderStyle: "dashed",
-    borderRadius: 1,
-    borderRadius: 10,
+    borderColor:'black',
+    borderRadius:16,
+    borderTopWidth:2,
+    borderLeftWidth:2,borderRightWidth:2,
+    borderBottomWidth:5,
+    padding:24,
+    margin:8,
+    fontSize:18
   }
 
 });
+
+
+

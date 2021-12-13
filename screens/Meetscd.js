@@ -39,7 +39,7 @@ const Meetscd = ({ route, navigation }) => {
   let DATA = [];
   if (selectedStartDate){
     let a = selectedStartDate.hour(10).minute(30).second(0).format("hh:mm A");
-    console.log('a',a)
+    // console.log('a',a)
     let obj1 = {
       id: "1",
       liDate: a,
@@ -51,7 +51,7 @@ const Meetscd = ({ route, navigation }) => {
   }
   if (selectedStartDate){
     let b = selectedStartDate.hour(12).minute(0).second(0).format("hh:mm A");
-    console.log('b',b)
+    // console.log('b',b)
     let obj2 = {
       id: "2",
       liDate: b,
@@ -62,8 +62,8 @@ const Meetscd = ({ route, navigation }) => {
     console.log("no date selected errororo");
   }
   if (selectedStartDate){
-    let c = selectedStartDate.hour(3).minute(30).second(0).format("hh:mm A");
-    console.log('c',c)
+    let c = selectedStartDate.hour(15).minute(30).second(0).format("hh:mm A");
+    // console.log('c',c)
     let obj3 = {
       id: "3",
       liDate: c,
@@ -75,7 +75,7 @@ const Meetscd = ({ route, navigation }) => {
   }
   if (selectedStartDate){
     let d = selectedStartDate.hour(17).minute(30).second(0).format("hh:mm A");
-    console.log('d',d)
+    // console.log('d',d)
     let obj = {
       id: "4",
       liDate: d,
@@ -85,7 +85,7 @@ const Meetscd = ({ route, navigation }) => {
   else{
     console.log("no date selected errororo");
   }
-  console.log('aaa',DATA);
+  // console.log('aaa',DATA);
 // console.log(a,b,c,d)
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -135,17 +135,25 @@ const Meetscd = ({ route, navigation }) => {
       {/* <View>
         <Text>SELECTED START DATE:{startDate}</Text>
       </View> */}
-      <SafeAreaView style={styles.listContainer}>
+      {/* <SafeAreaView style={styles.listContainer}>
         <ScrollView>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        extraData={selectedId}
-      />
+          <FlatList
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            extraData={selectedId}
+          />
       </ScrollView>
-    </SafeAreaView>
-    
+    </SafeAreaView> */}
+      <SafeAreaView style={styles.flatcont}>
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          extraData={selectedId}
+        />
+      </SafeAreaView>
+
     </View>
   );
 }
@@ -182,10 +190,18 @@ const styles = StyleSheet.create({
     top: 340,
   },
   listContainer: {
-    // flex: 1,
+    flex: 1,
     justifyContent: 'center',
     position: 'absolute',
     top: 370,
+    flexGrow: 1,
+  },
+  flatcont: {
+    flex: 1,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 370,
+    flexGrow: 1,
   },
   item: {
     padding: 20,

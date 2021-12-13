@@ -59,8 +59,9 @@ export default function Contactpg({ navigation }) {
       }
     }
   };
+  
  
-  const renderItem = ({ item,index }) => (   
+  const renderItem = ({ item,index }) => (
     <View style={{ minHeight: 25 }}>
       <TouchableOpacity onPress={() => {
           navigation.navigate('Meetscd', {
